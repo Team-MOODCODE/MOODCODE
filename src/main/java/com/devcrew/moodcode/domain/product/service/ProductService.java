@@ -5,6 +5,9 @@ import com.devcrew.moodcode.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import com.devcrew.moodcode.domain.product.dto.ProductResponseDto;
+import java.util.stream.Collectors;
+
 
 import java.util.List;
 import java.util.Set;
