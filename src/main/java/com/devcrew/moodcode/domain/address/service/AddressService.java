@@ -5,6 +5,7 @@ import com.devcrew.moodcode.domain.address.dto.AddressRes;
 import com.devcrew.moodcode.domain.address.repository.AddressRepository;
 import com.devcrew.moodcode.domain.address.service.command.AddressCreateCommand;
 import com.devcrew.moodcode.domain.user.User;
+import com.devcrew.moodcode.domain.user.exception.UserNotFoundException;
 import com.devcrew.moodcode.domain.user.repository.UserRepository;
 import com.devcrew.moodcode.global.error.ErrorCode;
 import com.devcrew.moodcode.global.error.exception.BusinessException;

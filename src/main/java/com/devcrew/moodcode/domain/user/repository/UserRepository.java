@@ -1,5 +1,6 @@
 package com.devcrew.moodcode.domain.user.repository;
 
+import com.devcrew.moodcode.domain.user.Provider;
 import com.devcrew.moodcode.domain.user.User;
 import com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     // 소셜 로그인 회원 찾기 (provider + providerId 조합)
-    Optional<User> findByProviderAndProviderId(DefaultAccessorNamingStrategy.Provider provider, String providerId);
+    Optional<User> findByProviderAndProviderId(Provider provider, String providerId);
 }

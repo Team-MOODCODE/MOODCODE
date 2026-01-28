@@ -2,6 +2,8 @@ package com.devcrew.moodcode.domain.auth.service;
 
 
 import com.devcrew.moodcode.domain.user.User;
+import com.devcrew.moodcode.domain.user.exception.DuplicateEmailException;
+import com.devcrew.moodcode.domain.user.exception.UserNotFoundException;
 import com.devcrew.moodcode.domain.user.repository.UserRepository;
 import com.devcrew.moodcode.domain.auth.dto.LoginReq;
 import com.devcrew.moodcode.domain.auth.dto.TokenRes;
