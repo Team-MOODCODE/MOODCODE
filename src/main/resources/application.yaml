@@ -36,8 +36,8 @@ spring:
       client:
         registration:
           google:
-            client-id: "구글_CLIENT_ID"
-            client-secret: "구글_SECRET"
+            client-id: ""
+            client-secret: ""
             scope: profile, email
             redirect-uri: "http://localhost:8080/login/oauth2/code/google"
           kakao:
@@ -59,7 +59,7 @@ spring:
 jwt:
   issuer: moodcode
   # 64바이트 이상 임의의 문자열 (운영 시 환경변수 처리 필수)
-  client-secret: "MySuperSecretKeyForMoodcodeProjectMustBeLongerThan64BytesToUseHS512Algorithm!!"
+  client-secret: "9d2k39dKDKs92kd93kd9KDKS92kd93kd9KDKS92kd93kd9KDKS92kd93kd9KDKS92kd93kddssDowkDKSLSPWODKWDNddsdwde"
   expiry-seconds: 1800 # 30분 (Access Token 짧게 유지)
   refresh-expiry-seconds: 1209600 # 14일 (Refresh Token)
 
