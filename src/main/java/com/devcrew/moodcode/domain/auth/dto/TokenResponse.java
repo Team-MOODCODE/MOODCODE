@@ -1,6 +1,6 @@
 package com.devcrew.moodcode.domain.auth.dto;
 
-public record TokenRes(
+public record TokenResponse(
         String accessToken,
         String refreshToken
 ) {}

@@ -1,7 +1,7 @@
 package com.devcrew.moodcode.domain.address.controller;
 
-import com.devcrew.moodcode.domain.address.dto.AddressRes;
-import com.devcrew.moodcode.domain.address.dto.AddressCreateReq;
+import com.devcrew.moodcode.domain.address.dto.AddressResponse;
+import com.devcrew.moodcode.domain.address.dto.AddressCreateRequest;
 import com.devcrew.moodcode.domain.address.service.AddressService;
 import com.devcrew.moodcode.global.auth.LoginUser;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<Void> addAddress(
             @LoginUser Long userId,
-            @RequestBody @Valid AddressCreateReq req
+            @RequestBody @Valid AddressCreateRequest req
     ) {
         addressService.addAddress(userId, req.toCommand());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -37,8 +37,8 @@ public class AddressController {
      * 내 배송지 목록 조회
      */
     @GetMapping
-    public ResponseEntity<List<AddressRes>> getMyAddresses(@LoginUser Long userId) {
-        List<AddressRes> response = addressService.getMyAddresses(userId);
+    public ResponseEntity<List<AddressResponse>> getMyAddresses(@LoginUser Long userId) {
+        List<AddressResponse> response = addressService.getMyAddresses(userId);
         return ResponseEntity.ok(response);
     }
 

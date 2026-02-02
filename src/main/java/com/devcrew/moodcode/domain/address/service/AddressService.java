@@ -1,7 +1,7 @@
 package com.devcrew.moodcode.domain.address.service;
 
 import com.devcrew.moodcode.domain.address.Address;
-import com.devcrew.moodcode.domain.address.dto.AddressRes;
+import com.devcrew.moodcode.domain.address.dto.AddressResponse;
 import com.devcrew.moodcode.domain.address.repository.AddressRepository;
 import com.devcrew.moodcode.domain.address.service.command.AddressCreateCommand;
 import com.devcrew.moodcode.domain.user.User;
@@ -51,12 +51,12 @@ public class AddressService {
     /**
      * 배송지 목록 조회
      */
-    public List<AddressRes> getMyAddresses(Long userId) {
+    public List<AddressResponse> getMyAddresses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
         return addressRepository.findAllByUser(user).stream()
-                .map(AddressRes::from)
+                .map(AddressResponse::from)
                 .toList();
     }
 

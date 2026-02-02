@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 
 @Builder
-public record AddressCreateReq(
+public record AddressCreateRequest(
         @NotBlank String recipientName,
         @NotBlank @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$") String phoneNumber,
         @NotBlank String roadAddress,

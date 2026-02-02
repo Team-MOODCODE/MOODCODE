@@ -2,7 +2,7 @@ package com.devcrew.moodcode.domain.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginReq(
+public record LoginRequest(
         @NotBlank String email,
         @NotBlank String password
 ) {}

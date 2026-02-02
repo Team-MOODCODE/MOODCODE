@@ -1,8 +1,8 @@
 package com.devcrew.moodcode.domain.auth.controller;
 
-import com.devcrew.moodcode.domain.auth.dto.LoginReq;
-import com.devcrew.moodcode.domain.auth.dto.TokenRes;
-import com.devcrew.moodcode.domain.auth.dto.UserSignupReq;
+import com.devcrew.moodcode.domain.auth.dto.LoginRequest;
+import com.devcrew.moodcode.domain.auth.dto.TokenResponse;
+import com.devcrew.moodcode.domain.auth.dto.UserSignupRequest;
 import com.devcrew.moodcode.domain.auth.service.AuthService;
 import com.devcrew.moodcode.global.auth.LoginUser;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ public class AuthController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public ResponseEntity<Long> signup(@RequestBody @Valid UserSignupReq req) {
+    public ResponseEntity<Long> signup(@RequestBody @Valid UserSignupRequest req) {
         Long userId = authService.signup(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
@@ -31,9 +31,9 @@ public class AuthController {
      * 자체 로그인
      */
     @PostMapping("/login")
-    public ResponseEntity<TokenRes> login(@RequestBody @Valid LoginReq req) {
-        TokenRes tokenRes = authService.login(req);
-        return ResponseEntity.ok(tokenRes);
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest req) {
+        TokenResponse tokenResponse = authService.login(req);
+        return ResponseEntity.ok(tokenResponse);
     }
 
     /**

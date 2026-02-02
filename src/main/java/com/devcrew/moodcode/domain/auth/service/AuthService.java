@@ -5,9 +5,9 @@ import com.devcrew.moodcode.domain.user.User;
 import com.devcrew.moodcode.domain.user.exception.DuplicateEmailException;
 import com.devcrew.moodcode.domain.user.exception.UserNotFoundException;
 import com.devcrew.moodcode.domain.user.repository.UserRepository;
-import com.devcrew.moodcode.domain.auth.dto.LoginReq;
-import com.devcrew.moodcode.domain.auth.dto.TokenRes;
-import com.devcrew.moodcode.domain.auth.dto.UserSignupReq;
+import com.devcrew.moodcode.domain.auth.dto.LoginRequest;
+import com.devcrew.moodcode.domain.auth.dto.TokenResponse;
+import com.devcrew.moodcode.domain.auth.dto.UserSignupRequest;
 import com.devcrew.moodcode.global.auth.jwt.TokenProvider;
 import com.devcrew.moodcode.global.error.ErrorCode;
 import com.devcrew.moodcode.global.error.exception.BusinessException;
@@ -37,7 +37,7 @@ public class AuthService {
      * 회원가입
      */
     @Transactional
-    public Long signup(UserSignupReq req) {
+    public Long signup(UserSignupRequest req) {
         if (userRepository.existsByEmail(req.email())) {
             throw new DuplicateEmailException();
         }
@@ -49,7 +49,7 @@ public class AuthService {
      * 로그인
      */
     @Transactional
-    public TokenRes login(LoginReq req) {
+    public TokenResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.email())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -64,7 +64,7 @@ public class AuthService {
         // Refresh Token Redis 저장 (Key: "RT:{userId}", Value: refreshToken)
         redisService.setValues("RT:" + user.getId(), refreshToken, Duration.ofSeconds(refreshExpirySeconds));
 
-        return new TokenRes(accessToken, refreshToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     /**

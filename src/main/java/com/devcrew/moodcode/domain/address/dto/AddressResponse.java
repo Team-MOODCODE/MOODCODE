@@ -14,7 +14,7 @@ import lombok.Builder;
  * @param isDefault
  */
 @Builder
-public record AddressRes(
+public record AddressResponse(
         Long id,
         String recipientName,
         String phoneNumber,
@@ -22,8 +22,8 @@ public record AddressRes(
         String detailAddress,
         boolean isDefault
 ) {
-    public static AddressRes from(Address address) {
-        return AddressRes.builder()
+    public static AddressResponse from(Address address) {
+        return AddressResponse.builder()
                 .id(address.getId())
                 .recipientName(address.getRecipientName())
                 .phoneNumber(address.getPhoneNumber())
