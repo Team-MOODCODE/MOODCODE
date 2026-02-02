@@ -1,5 +1,6 @@
 package com.devcrew.moodcode.domain.address.controller;
 
+import com.devcrew.moodcode.domain.address.dto.AddressListResponse;
 import com.devcrew.moodcode.domain.address.dto.AddressResponse;
 import com.devcrew.moodcode.domain.address.dto.AddressCreateRequest;
 import com.devcrew.moodcode.domain.address.service.AddressService;
@@ -37,8 +38,8 @@ public class AddressController {
      * 내 배송지 목록 조회
      */
     @GetMapping
-    public ResponseEntity<List<AddressResponse>> getMyAddresses(@LoginUser Long userId) {
-        List<AddressResponse> response = addressService.getMyAddresses(userId);
+    public ResponseEntity<AddressListResponse> getMyAddresses(@LoginUser Long userId) {
+        AddressListResponse response = addressService.getMyAddresses(userId);
         return ResponseEntity.ok(response);
     }
 
