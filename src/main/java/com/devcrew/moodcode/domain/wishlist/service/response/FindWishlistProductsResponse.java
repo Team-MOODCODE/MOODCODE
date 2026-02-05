@@ -14,7 +14,7 @@ public record FindWishlistProductsResponse(
         products.stream().map(product -> {
       return FindWishlistProductResponse.builder()
           .productId(product.getId())
-          .brandName(product.getBrand())
+          .brandName(product.getBrand().getName())
           .productName(product.getName())
           .originalPrice(product.getOriginalPrice())
           .productLikeCount(product.getLikeCount())
