@@ -12,6 +12,7 @@ import com.devcrew.moodcode.global.error.exception.BusinessException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class WishlistBrandService implements WishlistService {
   private final WishlistRepository wishlistRepository;
   private final WishlistBrandRepository wishlistBrandRepository;
 
+  @Transactional
   @Override
   public void like(Long userId, Long brandId) {
     Wishlist wishlist = findWishlistByUserIdWithThrow(userId);
@@ -35,6 +37,7 @@ public class WishlistBrandService implements WishlistService {
     wishlistRepository.save(wishlist);
   }
 
+  @Transactional
   @Override
   public void remove(Long userId, Long brandId) {
     WishlistBrand wishlistBrand = findWishlistBrandByBrandIdWithThrow(brandId);
@@ -42,6 +45,7 @@ public class WishlistBrandService implements WishlistService {
     wishlistBrandRepository.delete(wishlistBrand);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public FindWishlistBrandsResponse getWishlist(Long userId) {
     // 로그인한 자신의 id로 자신의 위시리스트(좋아요 목록)을 조회
