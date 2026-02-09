@@ -1,5 +1,6 @@
 package com.devcrew.moodcode.domain.cart;
 
+import com.devcrew.moodcode.global.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,13 +11,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
     name = "cartItem",
     uniqueConstraints = {
@@ -26,18 +30,13 @@ import org.hibernate.annotations.UpdateTimestamp;
         )
     }
 )
-@NoArgsConstructor
-public class CartItem {
+public class CartItem extends BaseTimeEntity {
   @Id @Column(name = "cart_item_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, columnDefinition = "int default 1")
-  private int count = 1;
-
-  @UpdateTimestamp // 변경 시 자동 업데이트.
-  @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+  @Column(nullable = false)
+  private int count;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cart_id")
@@ -47,8 +46,8 @@ public class CartItem {
   @JoinColumn(name = "product_option_id")
   private ProductOption productOption;
 
-  public void addCount() {
-    count++;
+  public void addCount(int count) {
+    this.count += count;
   }
 
   public void updateOption(ProductOption productOption, int count) {
@@ -56,19 +55,12 @@ public class CartItem {
     this.count = count;
   }
 
-  public void updateAt() {
-    this.updatedAt = LocalDateTime.now();
-  }
-
-  public CartItem(ProductOption productOption, int count, Cart cart) {
-    this.productOption = productOption;
-    this.count = count;
-    this.updatedAt = LocalDateTime.now();
-    this.cart = cart;
-  }
-
-  public static CartItem createCartItem(ProductOption productOption, int count, Cart cart) {
-    return new CartItem(productOption, count, cart);
+  public static CartItem of(ProductOption productOption, int count, Cart cart) {
+    return CartItem.builder()
+        .productOption(productOption)
+        .count(count)
+        .cart(cart)
+        .build();
   }
 
 }
