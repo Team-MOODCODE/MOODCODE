@@ -1,4 +1,4 @@
-package com.devcrew.moodcode.domain.cart.controller.command;
+package com.devcrew.moodcode.domain.cart.service.command;
 
 public record RemoveCartItemCommand(Long userId, Long cartItemId) {
 
