@@ -3,16 +3,15 @@ package com.devcrew.moodcode.domain.cart.service;
 import com.devcrew.moodcode.domain.cart.Cart;
 import com.devcrew.moodcode.domain.cart.CartItem;
 import com.devcrew.moodcode.domain.cart.ProductOption;
-import com.devcrew.moodcode.domain.cart.controller.command.AddCartItemCommand;
-import com.devcrew.moodcode.domain.cart.controller.command.FindCartItemCommand;
-import com.devcrew.moodcode.domain.cart.controller.command.RemoveCartItemCommand;
-import com.devcrew.moodcode.domain.cart.controller.command.UpdateItemCommand;
+import com.devcrew.moodcode.domain.cart.service.command.AddCartItemCommand;
+import com.devcrew.moodcode.domain.cart.service.command.UpdateCartItemCommand;
 import com.devcrew.moodcode.domain.cart.repository.CartItemRepository;
 import com.devcrew.moodcode.domain.cart.repository.CartRepository;
 import com.devcrew.moodcode.domain.cart.repository.ProductOptionRepository;
-import com.devcrew.moodcode.domain.cart.service.response.FindCartItemsResponse;
+import com.devcrew.moodcode.domain.cart.dto.FindCartItemsResponse;
+import com.devcrew.moodcode.global.error.ErrorCode;
+import com.devcrew.moodcode.global.error.exception.BusinessException;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,33 +26,32 @@ public class CartService {
 
   // 장바구니 추가 기능
   @Transactional
-  public void addCartItem(AddCartItemCommand command) {
-    Cart cart = findCartByUserId(command.userId());
+  public void addCartItem(Long userId, AddCartItemCommand command) {
+    Cart cart = findCartByUserId(userId);
     List<CartItem> cartItems = cart.getCartItems();
 
     ProductOption productOption = findProductOption(command.productOptionId());
 
-    cartItems.add(CartItem.createCartItem(productOption, 1, cart));
-
-    if (increaseCountIfDuplicate(cart.getId(), command.productOptionId())) {
+    if (increaseCountIfDuplicate(cart.getId(), command.productOptionId(), command.count())) {
       return;
     }
 
+    cartItems.add(CartItem.of(productOption, command.count(), cart));
     cartRepository.save(cart);
   }
 
 
   // 장바구니 상품 조회 기능
-  public FindCartItemsResponse getCartItems(FindCartItemCommand command) {
-    Cart cart = findCartByUserId(command.userId());
+  public FindCartItemsResponse getCartItems(Long userId) {
+    Cart cart = findCartByUserId(userId);
     List<CartItem> cartItems = cart.getCartItems();
     return FindCartItemsResponse.from(cartItems);
   }
 
   // 장바구니 상품 옵션 변경
   @Transactional
-  public void updateCartItem(UpdateItemCommand command) {
-    CartItem cartItem = findCartItemById(command.cartItemId());
+  public void updateCartItem(Long userId, Long cartItemId, UpdateCartItemCommand command) {
+    CartItem cartItem = findCartItemById(cartItemId);
 
     Long productId = cartItem.getProductOption().getProductId();
     String optionName = command.optionName();
@@ -61,14 +59,13 @@ public class CartService {
     ProductOption productOption = findByProductIdAndOptionName(productId, optionName);
 
     cartItem.updateOption(productOption, command.count());
-    cartItem.updateAt();
     cartItemRepository.save(cartItem);
   }
 
   // 장바구니 상품 삭제 기능
   @Transactional
-  public void removeCartItem(RemoveCartItemCommand command) {
-    CartItem cartItem = findCartItemById(command.cartItemId());
+  public void removeCartItem(Long userId, Long cartItemId) {
+    CartItem cartItem = findCartItemById(cartItemId);
 
     cartItemRepository.delete(cartItem);
   }
@@ -82,41 +79,41 @@ public class CartService {
 
   private Cart findCartByUserId(Long userId) {
     Cart cart = cartRepository.findByUserId(userId)
-        .orElseThrow(() -> new IllegalArgumentException("장바구니에 상품이 없음"));
+        .orElseThrow(() -> new BusinessException(ErrorCode.CART_NOT_FOUND));
 
     return cart;
   }
 
   private ProductOption findByProductIdAndOptionName(Long productId, String optionName) {
     return productOptionRepository.findByProductIdAndOptionName(productId, optionName)
-        .orElseThrow(() -> new IllegalArgumentException("해당하는 상품 옵션은 없음"));
+        .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_PRODUCT_OPTION));
   }
 
   private ProductOption findProductOption(Long productOptionId) {
     return productOptionRepository.findById(productOptionId)
-        .orElseThrow(() -> new IllegalArgumentException("선택한 상품 옵션이 없습니다."));
+        .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
   }
 
   private CartItem findCartItemById(Long cartItemId) {
     return cartItemRepository.findById(cartItemId)
-        .orElseThrow(() -> new IllegalArgumentException(""));
+        .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
   }
 
   private CartItem findCartItemByPrdOId(Long productOptionId) {
     return cartItemRepository.findByProductOptionId(productOptionId)
-        .orElseThrow(() -> new IllegalArgumentException("내 장바구니에 선택한 상품 옵션이 없음."));
+        .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
   }
 
   private List<ProductOption> findAllByProductId(Long productId) {
     return productOptionRepository.findAllByProductId(productId);
   }
 
-  private boolean increaseCountIfDuplicate(Long cartId, Long productOptionId) {
+  private boolean increaseCountIfDuplicate(Long cartId, Long productOptionId, int count) {
     Boolean isDuplicate = cartItemRepository.existsByCartIdAndProductOptionId(cartId, productOptionId);
 
-    if (isDuplicate.equals(true)) {
+    if (isDuplicate) {
       CartItem cartItem = findCartItemByPrdOId(productOptionId);
-      cartItem.addCount();
+      cartItem.addCount(count);
       cartItemRepository.save(cartItem);
       return true;
     }
