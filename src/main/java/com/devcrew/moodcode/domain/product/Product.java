@@ -19,8 +19,8 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
-    @Column(nullable = false)
-    private String category; // TOP, OUTER ...
+    @Enumerated(EnumType.STRING)
+    private Category category; // TOP, OUTER ...
 
     @Column(name = "original_price", nullable = false)
     private Long originalPrice;

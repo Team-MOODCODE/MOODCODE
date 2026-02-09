@@ -1,0 +1,19 @@
+package com.devcrew.moodcode.domain.product.dto;
+
+import com.devcrew.moodcode.domain.product.ProductOption;
+import lombok.Builder;
+
+@Builder
+public record ProductOptionResponse(
+        Long productOptionId,
+        String optionName,
+        int stock
+) {
+    public static ProductOptionResponse from(ProductOption option) {
+        return ProductOptionResponse.builder()
+                .productOptionId(option.getProductOptionId())
+                .optionName(option.getOptionName())
+                .stock(option.getStock())
+                .build();
+    }
+}
