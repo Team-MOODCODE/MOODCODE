@@ -1,6 +1,8 @@
 package com.devcrew.moodcode.domain.product.controller;
 
 import com.devcrew.moodcode.domain.product.dto.ProductDetailResponse;
+import com.devcrew.moodcode.domain.product.dto.ProductDetailWrapperResponse;
+import com.devcrew.moodcode.domain.product.dto.ProductListResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductResponse;
 import com.devcrew.moodcode.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -21,20 +23,26 @@ public class ProductController {
      * - keyword
      */
     @GetMapping
-    public List<ProductResponse> getProducts(
+    public ProductListResponse getProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String keyword
     ) {
-        return productService.getProducts(category, keyword);
+        List<ProductResponse> products =
+                productService.getProducts(category, keyword);
+
+        return new ProductListResponse(products.size(), products);
     }
 
     /**
      * 상품 상세 조회
      */
     @GetMapping("/{productId}")
-    public ProductDetailResponse getProductDetail(
+    public ProductDetailWrapperResponse getProductDetail(
             @PathVariable Long productId
     ) {
-        return productService.getProductDetail(productId);
+        ProductDetailResponse detail =
+                productService.getProductDetail(productId);
+
+        return new ProductDetailWrapperResponse(detail);
     }
 }
