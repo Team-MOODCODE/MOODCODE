@@ -19,36 +19,44 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductOptionRepository productOptionRepository;
 
     /**
      * 상품 목록 조회
-     * - category + keyword 동시 사용 불가
      * - category 없으면 전체 조회
      * - 항상 is_deleted = false
      */
     public List<ProductResponse> getProducts(String category, String keyword) {
 
-        if (StringUtils.hasText(category) && StringUtils.hasText(keyword)) {
-            throw new IllegalArgumentException("category와 keyword는 동시에 사용할 수 없습니다.");
-        }
-
-        List<Product> products;
+        Category categoryEnum = null;
 
         if (StringUtils.hasText(category)) {
-            Category categoryEnum;
-
             try {
                 categoryEnum = Category.valueOf(category.trim().toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("유효하지 않은 category 값입니다.");
             }
+        }
 
-            products = productRepository.findByCategoryAndIsDeletedFalse(categoryEnum);
+        List<Product> products;
+
+        if (categoryEnum != null && StringUtils.hasText(keyword)) {
+
+            // 🔥 둘 다 있을 때 (AND 검색)
+            products = productRepository
+                    .findByCategoryAndNameContainingAndIsDeletedFalse(
+                            categoryEnum,
+                            keyword
+                    );
+
+        } else if (categoryEnum != null) {
+
+            products = productRepository
+                    .findByCategoryAndIsDeletedFalse(categoryEnum);
 
         } else if (StringUtils.hasText(keyword)) {
 
-            products = productRepository.findByProductNameContainingAndIsDeletedFalse(keyword);
+            products = productRepository
+                    .findByNameContainingAndIsDeletedFalse(keyword);
 
         } else {
 
@@ -61,7 +69,7 @@ public class ProductService {
     }
 
     /**
-     * 상품 상세 조회
+     * 상품 상세 조회 (연관관계 매핑으로 인한 서비스 로직 수정)
      * - 삭제된 상품 조회 불가
      * - 옵션(재고 포함) 함께 반환
      */
@@ -73,12 +81,11 @@ public class ProductService {
                         new IllegalArgumentException("존재하지 않거나 삭제된 상품입니다.")
                 );
 
-        List<ProductOption> options =
-                productOptionRepository.findByProductId(productId);
-
-        List<ProductOptionResponse> optionResponses = options.stream()
-                .map(ProductOptionResponse::from)
-                .toList();
+        // 상품 상세조회 서비스 로직 수정
+        List<ProductOptionResponse> optionResponses =
+                product.getProductOptions().stream()
+                        .map(ProductOptionResponse::from)
+                        .toList();
 
         return ProductDetailResponse.from(product, optionResponses);
     }

@@ -11,8 +11,8 @@ public record ProductOptionResponse(
 ) {
     public static ProductOptionResponse from(ProductOption option) {
         return ProductOptionResponse.builder()
-                .productOptionId(option.getProductOptionId())
-                .optionName(option.getOptionName())
+                .productOptionId(option.getId())
+                .optionName(option.getName())
                 .stock(option.getStock())
                 .build();
     }

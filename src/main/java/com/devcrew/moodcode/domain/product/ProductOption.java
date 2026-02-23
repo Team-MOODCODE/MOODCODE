@@ -13,17 +13,18 @@ public class ProductOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_option_id")
-    private Long productOptionId;
-
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    private Long id;
 
     @Column(name = "option_name", nullable = false)
-    private String optionName;
+    private String name;
 
     @Column(nullable = false)
     private int stock;
 
     @Version
     private Long version;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

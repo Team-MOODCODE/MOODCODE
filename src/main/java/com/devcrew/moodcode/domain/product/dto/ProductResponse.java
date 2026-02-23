@@ -17,8 +17,8 @@ public record ProductResponse(
 
     public static ProductResponse from (Product product) {
         return ProductResponse.builder()
-                .productId(product.getProductId())
-                .productName(product.getProductName())
+                .productId(product.getId())
+                .productName(product.getName())
                 .category(product.getCategory())
                 .originalPrice(product.getOriginalPrice())
                 .thumbnailImageUrl(product.getThumbnailImageUrl())

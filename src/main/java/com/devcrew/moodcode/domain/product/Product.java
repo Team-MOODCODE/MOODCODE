@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,10 +16,10 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long id;
 
     @Column(nullable = false)
-    private String productName;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     private Category category; // TOP, OUTER ...
@@ -30,4 +32,9 @@ public class Product {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
+
+    @OneToMany(mappedBy = "product",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ProductOption> productOptions = new ArrayList<>();
 }
