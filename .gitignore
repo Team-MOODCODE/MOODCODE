@@ -35,6 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
 /src/main/resources/application.yaml
 /src/main/resources/application_oauth2.yaml
 /docker-compose.yml
+
+
+### .env ###
+.env
+
