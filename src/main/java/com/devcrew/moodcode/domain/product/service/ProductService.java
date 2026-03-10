@@ -2,12 +2,12 @@ package com.devcrew.moodcode.domain.product.service;
 
 import com.devcrew.moodcode.domain.product.Category;
 import com.devcrew.moodcode.domain.product.Product;
-import com.devcrew.moodcode.domain.product.ProductOption;
 import com.devcrew.moodcode.domain.product.dto.ProductDetailResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductOptionResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductResponse;
-import com.devcrew.moodcode.domain.product.repository.ProductOptionRepository;
 import com.devcrew.moodcode.domain.product.repository.ProductRepository;
+import com.devcrew.moodcode.global.error.ErrorCode;
+import com.devcrew.moodcode.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -33,7 +33,8 @@ public class ProductService {
             try {
                 categoryEnum = Category.valueOf(category.trim().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("유효하지 않은 category 값입니다.");
+                // 1. 카테고리 오류 발생 시 BusinessException으로 던짐
+                throw new BusinessException(ErrorCode.INVALID_CATEGORY);
             }
         }
 
@@ -41,7 +42,7 @@ public class ProductService {
 
         if (categoryEnum != null && StringUtils.hasText(keyword)) {
 
-            // 🔥 둘 다 있을 때 (AND 검색)
+            // 둘 다 있을 때 (AND 검색)
             products = productRepository
                     .findByCategoryAndNameContainingAndIsDeletedFalse(
                             categoryEnum,
@@ -74,14 +75,11 @@ public class ProductService {
      * - 옵션(재고 포함) 함께 반환
      */
     public ProductDetailResponse getProductDetail(Long productId) {
-
+        // 2. 사진에서 보여주신 '회원 정보 조회'와 동일한 패턴으로 수정
         Product product = productRepository.findById(productId)
                 .filter(p -> !p.isDeleted())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않거나 삭제된 상품입니다.")
-                );
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        // 상품 상세조회 서비스 로직 수정
         List<ProductOptionResponse> optionResponses =
                 product.getProductOptions().stream()
                         .map(ProductOptionResponse::from)
