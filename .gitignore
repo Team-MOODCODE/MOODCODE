@@ -44,3 +44,5 @@ out/
 ### .env ###
 .env
 
+/src/main/java/com/devcrew/moodcode/domain/order/**
+/src/main/java/com/devcrew/moodcode/domain/payment/**
