@@ -6,6 +6,7 @@ import com.devcrew.moodcode.domain.product.dto.ProductListResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductResponse;
 import com.devcrew.moodcode.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,26 +24,32 @@ public class ProductController {
      * - keyword
      */
     @GetMapping
-    public ProductListResponse getProducts(
+    public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String keyword
     ) {
         List<ProductResponse> products =
                 productService.getProducts(category, keyword);
 
-        return new ProductListResponse(products.size(), products);
+        ProductListResponse response = new ProductListResponse(products.size(), products);
+
+        // ResponseEntity.ok()로 감싸서 반환 (HTTP 200)
+        return ResponseEntity.ok(response);
     }
 
     /**
      * 상품 상세 조회
      */
     @GetMapping("/{productId}")
-    public ProductDetailWrapperResponse getProductDetail(
+    public ResponseEntity<ProductDetailWrapperResponse> getProductDetail(
             @PathVariable Long productId
     ) {
         ProductDetailResponse detail =
                 productService.getProductDetail(productId);
 
-        return new ProductDetailWrapperResponse(detail);
+        ProductDetailWrapperResponse response = new ProductDetailWrapperResponse(detail);
+
+        // ResponseEntity.ok()로 감싸서 반환 (HTTP 200)
+        return ResponseEntity.ok(response);
     }
 }
