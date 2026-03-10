@@ -20,8 +20,8 @@ public record ProductDetailResponse(
             List<ProductOptionResponse> options
     ) {
         return ProductDetailResponse.builder()
-                .productId(product.getProductId())
-                .productName(product.getProductName())
+                .productId(product.getId())
+                .productName(product.getName())
                 .category(product.getCategory())
                 .originalPrice(product.getOriginalPrice())
                 .thumbnailImageUrl(product.getThumbnailImageUrl())
