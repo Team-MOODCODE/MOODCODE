@@ -1,4 +1,4 @@
-package com.devcrew.moodcode.domain.user.service.command;
+package com.devcrew.moodcode.domain.user.service;
 
 import com.devcrew.moodcode.domain.user.User;
 import com.devcrew.moodcode.domain.user.dto.UserInfoUpdateRequest;
