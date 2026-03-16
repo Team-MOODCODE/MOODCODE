@@ -57,14 +57,7 @@ public class ProductController {
     public ResponseEntity<ProductOptionListResponse> getOption(
             @PathVariable Long productId
     ) {
-        List<ProductOptionResponse> options =
-                productService.getOption(productId);
-
-        ProductOptionListResponse response =
-                new ProductOptionListResponse(options.size(), options);
-
-        return ResponseEntity.ok(response);
+        ProductOptionListResponse options = productService.getOption(productId);
+        return ResponseEntity.ok(options);
     }
-
-
 }

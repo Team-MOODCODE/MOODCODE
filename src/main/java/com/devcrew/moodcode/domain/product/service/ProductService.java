@@ -3,6 +3,7 @@ package com.devcrew.moodcode.domain.product.service;
 import com.devcrew.moodcode.domain.product.Category;
 import com.devcrew.moodcode.domain.product.Product;
 import com.devcrew.moodcode.domain.product.dto.ProductDetailResponse;
+import com.devcrew.moodcode.domain.product.dto.ProductOptionListResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductOptionResponse;
 import com.devcrew.moodcode.domain.product.dto.ProductResponse;
 import com.devcrew.moodcode.domain.product.repository.ProductRepository;
@@ -91,15 +92,17 @@ public class ProductService {
      * 상품 옵션만 조회
      */
 
-    public List<ProductOptionResponse> getOption(Long productId) {
+    public ProductOptionListResponse getOption(Long productId) {
 
         Product product = productRepository.findById(productId)
                 .filter(p -> !p.isDeleted())
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        return product.getProductOptions().stream()
-                .map(ProductOptionResponse::from)
-                .toList();
-    }
+        List<ProductOptionResponse> optionResponses =
+                product.getProductOptions().stream()
+                        .map(ProductOptionResponse::from)
+                        .toList();
 
+        return new ProductOptionListResponse(optionResponses);
+    }
 }
