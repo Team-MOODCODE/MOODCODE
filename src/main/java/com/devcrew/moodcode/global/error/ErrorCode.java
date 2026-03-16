@@ -21,7 +21,13 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "A004", "접근 권한이 없습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "A005", "비밀번호가 일치하지 않습니다."),
 
-    // 3. Product (상품)
+    // 3. User (회원)
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "회원을 찾을 수 없습니다."),
+    EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "U002", "이미 존재하는 이메일입니다."),
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "U003", "아이디 또는 비밀번호가 잘못되었습니다."),
+    NICKNAME_DUPLICATE(HttpStatus.NOT_FOUND, "U004", "닉네임을 찾을 수 없습니다."),
+  
+  // 4. Product (상품)
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "존재하지 않거나 삭제된 상품입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "P002", "유효하지 않은 카테고리 값입니다."),
     OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "P003", "재고가 부족합니다.");
