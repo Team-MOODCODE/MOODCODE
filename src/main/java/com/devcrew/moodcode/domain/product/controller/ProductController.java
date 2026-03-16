@@ -1,9 +1,6 @@
 package com.devcrew.moodcode.domain.product.controller;
 
-import com.devcrew.moodcode.domain.product.dto.ProductDetailResponse;
-import com.devcrew.moodcode.domain.product.dto.ProductDetailWrapperResponse;
-import com.devcrew.moodcode.domain.product.dto.ProductListResponse;
-import com.devcrew.moodcode.domain.product.dto.ProductResponse;
+import com.devcrew.moodcode.domain.product.dto.*;
 import com.devcrew.moodcode.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,4 +49,22 @@ public class ProductController {
         // ResponseEntity.ok()로 감싸서 반환 (HTTP 200)
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 상품 옵션 목록 조회
+     */
+    @GetMapping("/{productId}/options")
+    public ResponseEntity<ProductOptionListResponse> getOption(
+            @PathVariable Long productId
+    ) {
+        List<ProductOptionResponse> options =
+                productService.getOption(productId);
+
+        ProductOptionListResponse response =
+                new ProductOptionListResponse(options.size(), options);
+
+        return ResponseEntity.ok(response);
+    }
+
+
 }

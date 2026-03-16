@@ -70,12 +70,11 @@ public class ProductService {
     }
 
     /**
-     * 상품 상세 조회 (연관관계 매핑으로 인한 서비스 로직 수정)
+     * 상품 상세 조회
      * - 삭제된 상품 조회 불가
      * - 옵션(재고 포함) 함께 반환
      */
     public ProductDetailResponse getProductDetail(Long productId) {
-        // 2. 사진에서 보여주신 '회원 정보 조회'와 동일한 패턴으로 수정
         Product product = productRepository.findById(productId)
                 .filter(p -> !p.isDeleted())
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -87,4 +86,20 @@ public class ProductService {
 
         return ProductDetailResponse.from(product, optionResponses);
     }
+
+    /**
+     * 상품 옵션만 조회
+     */
+
+    public List<ProductOptionResponse> getOption(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .filter(p -> !p.isDeleted())
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        return product.getProductOptions().stream()
+                .map(ProductOptionResponse::from)
+                .toList();
+    }
+
 }
